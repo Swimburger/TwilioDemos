@@ -4,13 +4,24 @@ using OptInStorage;
 using SendGrid;
 using SendGrid.Extensions.DependencyInjection;
 using SendGrid.Helpers.Mail;
+using Serilog;
 using Twilio.AspNet.Core;
 using Twilio.TwiML;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton(new OptInNumbersRepository(builder.Configuration["OptInNumbersFile"]));
-builder.Services.AddSingleton(new OptInEmailsRepository(builder.Configuration["OptInEmailsFile"]));
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.AddSerilog(logger);
+
+builder.Services.AddSingleton(new OptInNumbersRepository(
+    builder.Configuration["OptInNumbersFile"] ?? throw new Exception("'OptInNumbersFile' configuration missing.")
+));
+builder.Services.AddSingleton(new OptInEmailsRepository(
+    builder.Configuration["OptInEmailsFile"] ?? throw new Exception("'OptInEmailsFile' configuration missing.")
+));
 
 builder.Services.AddTwilioRequestValidation();
 builder.Services.AddSendGrid(options => options.ApiKey = builder.Configuration["SendGrid:ApiKey"]);
@@ -58,7 +69,8 @@ app.MapPost("/email", async (
     var headers = form["headers"].ToString()
         .Split("\n")
         .Where(h => h != "")
-        .ToLookup(h => h.Split(':')[0], h => h.Split(": ")[1]);
+        .Select(h => h.Split(':'))
+        .ToLookup(splitHeader => splitHeader[0], splitHeader => splitHeader[1].Trim());
    
     var messageSid =  headers["Message-ID"].First();
     subject = subject.Replace("-", "").Replace(" ", "");
