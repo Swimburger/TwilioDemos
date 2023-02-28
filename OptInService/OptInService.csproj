@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>eb51f448-15e5-4ed1-b0e8-7499b03782b8</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="SendGrid" Version="9.28.1" />
+      <PackageReference Include="SendGrid.Extensions.DependencyInjection" Version="1.0.1" />
+      <PackageReference Include="Twilio" Version="6.2.4" />
+      <PackageReference Include="Twilio.AspNet.Core" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\OptInStorage\OptInStorage.csproj" />
+    </ItemGroup>
+
+</Project>
