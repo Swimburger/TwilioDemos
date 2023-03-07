@@ -8,7 +8,9 @@ builder.Services
     .AddTwilioClient()
     .AddTwilioRequestValidation();
 
-builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = ForwardedHeaders.All);
+builder.Services.Configure<ForwardedHeadersOptions>(
+    options => options.ForwardedHeaders = ForwardedHeaders.All
+);
 
 var app = builder.Build();
 
@@ -22,7 +24,7 @@ twilioEndpoints.MapPost("/message", async (
     CancellationToken ct
 ) =>
 {
-    var form = await request.ReadFormAsync(ct).ConfigureAwait(false);
+    var form = await request.ReadFormAsync(ct);
     var body = form["Body"];
 
     return new MessagingResponse()

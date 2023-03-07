@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Twilio" Version="6.2.4" />
-    <PackageReference Include="Twilio.AspNet.Core" Version="7.0.0" />
+    <PackageReference Include="Twilio.AspNet.Core" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
